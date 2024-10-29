@@ -44,6 +44,10 @@
                       <label for="inputZip" class="form-label">Zip</label>
                       <input type="text" class="form-control" id="zip" name="zip">
                     </div>
+                    <div class="col-md-2">
+                      <label for="inputZip" class="form-label">Amount to be paid</label>
+                      <input type="text" class="form-control" id="total" name="total" value="" readonly>
+                    </div>
                     <div class="col-12">
                       <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="gridCheck">
@@ -66,15 +70,21 @@
             var cart = {}
         }else{
             cart = JSON.parse(localStorage.getItem('cart'));
-            for(item in cart){
-                let name = cart[item][1];
-                let qnt = cart[item][0];
-
-                itemString = `<li class="list-group-item">${name}-${qnt}</li>`;
-                $('#item-list').append(itemString);
-            }
         }
+        let total = 0;
+        for(item in cart){
+          let qnt = cart[item][0];
+          let name = cart[item][1];
+          let price = cart[item][2];
+          total += price;
+
+          itemString = `<li class="list-group-item"><span class="">${qnt}</span> of ${name}  <span class="badge bg-warning text-dark">${price}</span></li>`;
+          $('#item-list').append(itemString);
+        }
+        totalPrice = `<li class="list-group-item d-flex justify-content-between align-items-center"><b>Your total ${total}</b></li>`;
+        $('#item-list').append(totalPrice);
         $('#items').val(JSON.stringify(cart));
+        $('#total').val(total);
     </script>
 </body>
 </html>

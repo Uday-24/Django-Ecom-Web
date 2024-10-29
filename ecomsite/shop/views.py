@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Products, Order
 from django.core.paginator import Paginator
+from .froms import PlacedOrder
 # Create your views here.
 
 def index(request):
@@ -24,15 +25,21 @@ def detail(request, id):
     return render(request, 'shop/detail.html', {'product': product})
 
 def checkout(request):
-    if request.method == "POST":
-        items = request.POST.get('items',"")
-        name = request.POST.get('name',"")
-        email = request.POST.get('email',"")
-        address = request.POST.get('address',"")
-        city = request.POST.get('city',"")
-        state = request.POST.get('state',"")
-        zip = request.POST.get('zip',"")
+    form = PlacedOrder(request.POST or None)
 
-        order = Order(items=items, name=name, email=email, address=address, city=city, state=state, zip=zip)
-        order.save()
+    if form.is_valid():
+        form.save()
+        return redirect('index')
+    # if request.method == "POST":
+    #     items = request.POST.get('items',"")
+    #     name = request.POST.get('name',"")
+    #     email = request.POST.get('email',"")
+    #     address = request.POST.get('address',"")
+    #     city = request.POST.get('city',"")
+    #     state = request.POST.get('state',"")
+    #     zip = request.POST.get('zip',"")
+    #     total = request.POST.get('total',"")
+
+    #     order = Order(items=items, name=name, email=email, address=address, city=city, state=state, zip=zip, total=total)
+    #     order.save()
     return render(request, 'shop/checkout.html')
